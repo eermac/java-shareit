@@ -20,7 +20,7 @@ public class UserStorage {
     private Map<Integer, User> users = new HashMap<>();
     private int idGenerate = 0;
 
-    public Integer setId(){
+    public Integer setId() {
         idGenerate++;
         return this.idGenerate;
     }
@@ -28,7 +28,7 @@ public class UserStorage {
     public User add(User user) {
         log.info("Добавляем пользователя");
 
-        if(validate(user, HttpMethod.POST)){
+        if(validate(user, HttpMethod.POST)) {
             user.setId(setId());
             users.put(user.getId(), user);
         }
@@ -39,7 +39,7 @@ public class UserStorage {
     public User update(User user) {
         log.info("Обновляем данные пользователя");
 
-        if(validate(user, HttpMethod.PUT) & users.containsKey(user.getId())){
+        if (validate(user, HttpMethod.PUT) & users.containsKey(user.getId())) {
             users.put(user.getId(), user);
         } else throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -51,7 +51,7 @@ public class UserStorage {
 
         User updateUser = validatePatch(user, HttpMethod.PATCH, userId);
 
-        if(users.containsKey(userId)){
+        if (users.containsKey(userId)) {
             users.put(userId, updateUser);
         } else throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -70,16 +70,16 @@ public class UserStorage {
         return new ArrayList<>(users.values());
     }
 
-    public boolean validate(User user, HttpMethod method){
+    public boolean validate(User user, HttpMethod method) {
         List<String> emails = new ArrayList<>();
 
-        for(User next: users.values()){
+        for (User next: users.values()) {
             emails.add(next.getEmail());
         }
 
-        if(user.getName() == null){
+        if (user.getName() == null) {
             throw new ValidationException("Логин не может быть пустым и содержать пробелы", method);
-        } else if (user.getEmail() == null ){
+        } else if (user.getEmail() == null ) {
             throw new ValidationException("Email пустой", method, 1);
         } else if (emails.contains(user.getEmail())) {
             throw new ValidationException("Email  уже занят", method, 0);
@@ -87,30 +87,30 @@ public class UserStorage {
         return true;
     }
 
-    public User validatePatch(UserDto user, HttpMethod method, int userId){
-        if(user.getName() == null & user.getEmail() == null){
+    public User validatePatch(UserDto user, HttpMethod method, int userId) {
+        if (user.getName() == null & user.getEmail() == null) {
             throw new ValidationException("Проверьте передаваемые данные", method);
         }
 
         List<String> emails = new ArrayList<>();
 
-        for(User next: users.values()){
+        for (User next: users.values()) {
             emails.add(next.getEmail());
         }
 
-        if(user.getEmail() != null & emails.contains(user.getEmail())) {
-            if(emails.contains(users.get(userId).getEmail()) & users.get(userId).getEmail().equals(user.getEmail())){
+        if (user.getEmail() != null & emails.contains(user.getEmail())) {
+            if (emails.contains(users.get(userId).getEmail()) & users.get(userId).getEmail().equals(user.getEmail())) {
                 user.setEmail(users.get(userId).getEmail());
             } else {
                 throw new ValidationException("Email  уже занят", method, 0);
             }
         }
 
-        if(user.getName() == null){
+        if (user.getName() == null) {
             user.setName((users.get(userId).getName()));
         }
 
-        if(user.getEmail() == null){
+        if (user.getEmail() == null) {
             user.setEmail(users.get(userId).getEmail());
         }
 

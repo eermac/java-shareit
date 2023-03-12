@@ -10,17 +10,17 @@ public class ValidationException extends RuntimeException {
     public ValidationException(final String message, HttpMethod method){
         log.error(message);
 
-        if(HttpMethod.PUT.equals(method)){
+        if(HttpMethod.PUT.equals(method)) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         } else if (HttpMethod.POST.equals(method)) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ValidationException(final String message, HttpMethod method, int status){
+    public ValidationException(final String message, HttpMethod method, int status) {
         log.error(message);
 
-        if(HttpMethod.PUT.equals(method)){
+        if(HttpMethod.PUT.equals(method)) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         } else if (HttpMethod.POST.equals(method) & status == 0) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);

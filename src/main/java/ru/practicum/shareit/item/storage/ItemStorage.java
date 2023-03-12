@@ -26,7 +26,7 @@ public class ItemStorage {
     private Map<Integer, Item> items = new HashMap<>();
     private int idGenerate = 0;
 
-    public Integer setId(){
+    public Integer setId() {
         idGenerate++;
         return this.idGenerate;
     }
@@ -34,11 +34,17 @@ public class ItemStorage {
     public Item add(ItemDto item, Integer userId) {
         log.info("Добавляем вещь");
 
-        if(userController.getUser(userId) != null) {
-            if(item.getName() == null | item.getName().isBlank() | item.getDescription() == null | item.getAvailable() == null) {
+        if (userController.getUser(userId) != null) {
+            if (item.getName() == null | item.getName().isBlank() |
+                    item.getDescription() == null | item.getAvailable() == null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             } else {
-                Item newItem = new Item(setId(), item.getName(), item.getDescription(), item.getAvailable(), userId, null);
+                Item newItem = new Item(setId(),
+                                item.getName(),
+                                item.getDescription(),
+                                item.getAvailable(),
+                                userId,
+                                null);
                 items.put(newItem.getId(), newItem);
 
                 return newItem;
@@ -49,7 +55,7 @@ public class ItemStorage {
     public Item updatePatch(ItemDto item, Integer itemId, Integer userId) {
         log.info("Обновляем данные товара");
 
-        if(items.containsKey(itemId)){
+        if (items.containsKey(itemId)){
             Item updateItem =  transformPatch(item, itemId, userId);
             items.put(itemId, updateItem);
             return updateItem;
@@ -62,8 +68,8 @@ public class ItemStorage {
 
     public List<Item> getItems(Integer userId) {
         List<Item> itemList = new ArrayList<>();
-        for(Item next: items.values()){
-            if(next.getOwner().equals(userId)){
+        for (Item next: items.values()){
+            if (next.getOwner().equals(userId)){
                 itemList.add(next);
             }
         }
@@ -71,39 +77,37 @@ public class ItemStorage {
     }
 
     public List<Item> getItemsForSearch(String text)  {
-        if(text.isEmpty()){
+        if (text.isEmpty()) {
             return new ArrayList<>();
         }
 
         List<Item> itemList = new ArrayList<>();
-        for(Item next: items.values()){
-            if((next.getName().toLowerCase().contains(text.toLowerCase())
+        for (Item next: items.values()) {
+            if ((next.getName().toLowerCase().contains(text.toLowerCase())
                     | next.getDescription().toLowerCase().contains(text.toLowerCase()))
-                    & next.getAvailable() == true){
-                log.info(text);
-                log.info(next.getName() + " " + next.getDescription() + " " + next.getAvailable());
+                    & next.getAvailable() == true) {
                 itemList.add(next);
             }
         }
         return itemList;
     }
 
-    public Item transformPatch(ItemDto item, Integer itemId, Integer userId){
-        if(item.getName() == null & item.getDescription() == null & item.getAvailable() == null){
+    public Item transformPatch(ItemDto item, Integer itemId, Integer userId) {
+        if (item.getName() == null & item.getDescription() == null & item.getAvailable() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        } else if(!items.get(itemId).getOwner().equals(userId)) {
+        } else if (!items.get(itemId).getOwner().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        if(item.getName() == null) {
+        if (item.getName() == null) {
             item.setName(items.get(itemId).getName());
         }
 
-        if(item.getDescription() == null) {
+        if (item.getDescription() == null) {
             item.setDescription(items.get(itemId).getDescription());
         }
 
-        if(item.getAvailable() == null) {
+        if (item.getAvailable() == null) {
             item.setAvailable(items.get(itemId).getAvailable());
         }
 
