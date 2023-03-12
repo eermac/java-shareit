@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item.model;
 
 import ru.practicum.shareit.request.ItemRequest;
-import ru.practicum.shareit.user.model.User;
 import lombok.*;
 /**
  * TODO Sprint add-controllers.

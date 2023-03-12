@@ -18,13 +18,13 @@ import java.util.Map;
 @Slf4j
 public class ItemStorage {
     private final UserController userController;
+    private Map<Integer, Item> items = new HashMap<>();
+    private int idGenerate = 0;
 
     @Autowired
     public ItemStorage(UserController userController) {
         this.userController = userController;
     }
-    private Map<Integer, Item> items = new HashMap<>();
-    private int idGenerate = 0;
 
     public Integer setId() {
         idGenerate++;
@@ -55,7 +55,7 @@ public class ItemStorage {
     public Item updatePatch(ItemDto item, Integer itemId, Integer userId) {
         log.info("Обновляем данные товара");
 
-        if (items.containsKey(itemId)){
+        if (items.containsKey(itemId)) {
             Item updateItem =  transformPatch(item, itemId, userId);
             items.put(itemId, updateItem);
             return updateItem;
@@ -68,8 +68,8 @@ public class ItemStorage {
 
     public List<Item> getItems(Integer userId) {
         List<Item> itemList = new ArrayList<>();
-        for (Item next: items.values()){
-            if (next.getOwner().equals(userId)){
+        for (Item next: items.values()) {
+            if (next.getOwner().equals(userId)) {
                 itemList.add(next);
             }
         }

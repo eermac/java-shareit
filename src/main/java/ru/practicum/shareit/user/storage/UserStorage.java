@@ -28,7 +28,7 @@ public class UserStorage {
     public User add(User user) {
         log.info("Добавляем пользователя");
 
-        if(validate(user, HttpMethod.POST)) {
+        if (validate(user, HttpMethod.POST)) {
             user.setId(setId());
             users.put(user.getId(), user);
         }
@@ -79,7 +79,7 @@ public class UserStorage {
 
         if (user.getName() == null) {
             throw new ValidationException("Логин не может быть пустым и содержать пробелы", method);
-        } else if (user.getEmail() == null ) {
+        } else if (user.getEmail() == null) {
             throw new ValidationException("Email пустой", method, 1);
         } else if (emails.contains(user.getEmail())) {
             throw new ValidationException("Email  уже занят", method, 0);
