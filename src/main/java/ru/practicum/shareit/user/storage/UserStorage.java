@@ -39,7 +39,7 @@ public class UserStorage {
     public User update(User user) {
         log.info("Обновляем данные пользователя");
 
-        if (validate(user, HttpMethod.PUT) & users.containsKey(user.getId())) {
+        if (validate(user, HttpMethod.PUT) && users.containsKey(user.getId())) {
             users.put(user.getId(), user);
         } else throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -88,7 +88,7 @@ public class UserStorage {
     }
 
     public User validatePatch(UserDto user, HttpMethod method, int userId) {
-        if (user.getName() == null & user.getEmail() == null) {
+        if (user.getName() == null && user.getEmail() == null) {
             throw new ValidationException("Проверьте передаваемые данные", method);
         }
 
@@ -98,8 +98,8 @@ public class UserStorage {
             emails.add(next.getEmail());
         }
 
-        if (user.getEmail() != null & emails.contains(user.getEmail())) {
-            if (emails.contains(users.get(userId).getEmail()) & users.get(userId).getEmail().equals(user.getEmail())) {
+        if (user.getEmail() != null && emails.contains(user.getEmail())) {
+            if (emails.contains(users.get(userId).getEmail()) && users.get(userId).getEmail().equals(user.getEmail())) {
                 user.setEmail(users.get(userId).getEmail());
             } else {
                 throw new ValidationException("Email  уже занят", method, 0);

@@ -35,8 +35,8 @@ public class ItemStorage {
         log.info("Добавляем вещь");
 
         if (userController.getUser(userId) != null) {
-            if (item.getName() == null | item.getName().isBlank() |
-                    item.getDescription() == null | item.getAvailable() == null) {
+            if (item.getName() == null || item.getName().isBlank() ||
+                    item.getDescription() == null || item.getAvailable() == null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             } else {
                 Item newItem = new Item(setId(),
@@ -84,8 +84,8 @@ public class ItemStorage {
         List<Item> itemList = new ArrayList<>();
         for (Item next: items.values()) {
             if ((next.getName().toLowerCase().contains(text.toLowerCase())
-                    | next.getDescription().toLowerCase().contains(text.toLowerCase()))
-                    & next.getAvailable() == true) {
+                    || next.getDescription().toLowerCase().contains(text.toLowerCase()))
+                    && next.getAvailable() == true) {
                 itemList.add(next);
             }
         }
@@ -93,7 +93,7 @@ public class ItemStorage {
     }
 
     public Item transformPatch(ItemDto item, Integer itemId, Integer userId) {
-        if (item.getName() == null & item.getDescription() == null & item.getAvailable() == null) {
+        if (item.getName() == null && item.getDescription() == null && item.getAvailable() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         } else if (!items.get(itemId).getOwner().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);

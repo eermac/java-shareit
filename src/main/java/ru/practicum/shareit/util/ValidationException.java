@@ -22,9 +22,9 @@ public class ValidationException extends RuntimeException {
 
         if (HttpMethod.PUT.equals(method)) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        } else if (HttpMethod.POST.equals(method) & status == 0) {
+        } else if (HttpMethod.POST.equals(method) && status == 0) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        } else if (HttpMethod.POST.equals(method) & status == 1) {
+        } else if (HttpMethod.POST.equals(method) && status == 1) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
     }
