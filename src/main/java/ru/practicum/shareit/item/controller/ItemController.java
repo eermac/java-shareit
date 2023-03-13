@@ -19,6 +19,7 @@ import java.util.List;
 public class ItemController {
     private final ItemService itemService;
     private final String userHeaderId = "X-Sharer-User-Id";
+
     @Autowired
     public ItemController(ItemService itemService) {
         this.itemService = itemService;
