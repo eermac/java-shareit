@@ -14,8 +14,8 @@ import javax.validation.constraints.Email;
 @Builder
 @Data
 public class User {
-    int id;
-    String name;
+    private int id;
+    private String name;
     @Email
-    String email;
+    private String email;
 }

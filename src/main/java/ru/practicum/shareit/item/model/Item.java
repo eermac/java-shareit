@@ -10,10 +10,10 @@ import lombok.*;
 @Builder
 @Data
 public class Item {
-    int id;
-    String name;
-    String description;
-    Boolean available;
-    Integer owner;
-    ItemRequest request;
+    private int id;
+    private String name;
+    private String description;
+    private Boolean available;
+    private Integer owner;
+    private ItemRequest request;
 }

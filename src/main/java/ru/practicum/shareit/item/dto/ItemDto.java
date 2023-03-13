@@ -12,8 +12,8 @@ import lombok.Data;
 @Builder
 @Data
 public class ItemDto {
-    String name;
-    String description;
-    Boolean available;
-    int request;
+    private String name;
+    private String description;
+    private Boolean available;
+    private int request;
 }

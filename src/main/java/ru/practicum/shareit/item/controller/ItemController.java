@@ -18,20 +18,20 @@ import java.util.List;
 @Slf4j
 public class ItemController {
     private final ItemService itemService;
-
+    private final String userHeaderId = "X-Sharer-User-Id";
     @Autowired
     public ItemController(ItemService itemService) {
         this.itemService = itemService;
     }
 
     @PostMapping
-    public Item add(@Valid @RequestBody ItemDto item, @RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public Item add(@Valid @RequestBody ItemDto item, @RequestHeader(userHeaderId) Integer userId) {
         log.info("Добавляем вещь");
         return this.itemService.add(item, userId);
     }
 
     @PatchMapping("/{itemId}")
-    public Item updatePatch(@RequestBody ItemDto item, @PathVariable Integer itemId, @RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public Item updatePatch(@RequestBody ItemDto item, @PathVariable Integer itemId, @RequestHeader(userHeaderId) Integer userId) {
         log.info("Обновляем данные товара");
         return this.itemService.updatePatch(item, itemId, userId);
     }
@@ -42,7 +42,7 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<Item> getItems(@RequestHeader("X-Sharer-User-Id") Integer userId) {
+    public List<Item> getItems(@RequestHeader(userHeaderId) Integer userId) {
         return this.itemService.getItems(userId);
     }
 
