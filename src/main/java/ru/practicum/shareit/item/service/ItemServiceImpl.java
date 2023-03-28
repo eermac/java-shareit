@@ -1,44 +1,47 @@
 package ru.practicum.shareit.item.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.item.storage.ItemStorage;
+import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
-    private final ItemStorage itemStorage;
+    private final ItemRepository repository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    public ItemServiceImpl(ItemStorage itemStorage) {
-        this.itemStorage = itemStorage;
+    @Override
+    public Item add(Item item, Long userId) {
+        if(userRepository.existsById(userId)){
+            item.setOwner(userId);
+            return this.repository.save(item);
+        } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
     @Override
-    public Item add(ItemDto item, Integer userId) {
-        return this.itemStorage.add(item, userId);
+    public Item updatePatch(ItemDto item, Long itemId, Long userId) {
+        return null;
     }
 
     @Override
-    public Item updatePatch(ItemDto item, Integer itemId, Integer userId) {
-        return this.itemStorage.updatePatch(item, itemId, userId);
+    public Item getItem(Long itemId) {
+        return null;
     }
 
     @Override
-    public Item getItem(Integer itemId) {
-        return this.itemStorage.getItem(itemId);
-    }
-
-    @Override
-    public List<Item> getItems(Integer userId) {
-        return this.itemStorage.getItems(userId);
+    public List<Item> getItems(Long userId) {
+        return null;
     }
 
     @Override
     public List<Item> getItemsForSearch(String text) {
-        return this.itemStorage.getItemsForSearch(text);
+        return null;
     }
 }
