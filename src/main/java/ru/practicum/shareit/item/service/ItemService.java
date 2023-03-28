@@ -10,7 +10,7 @@ public interface ItemService {
 
     Item updatePatch(ItemDto item, Long itemId, Long userId);
 
-    Item getItem(Long itemId);
+    Item getItem(Long itemId, Long userId);
 
     List<Item> getItems(Long userId);
 
