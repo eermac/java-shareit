@@ -2,9 +2,10 @@ package ru.practicum.shareit.item.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
@@ -17,27 +18,33 @@ import java.util.List;
 @Slf4j
 public class ItemController {
     private final ItemService itemService;
-    private final String userHeaderId = "X-Sharer-User-Id";
+    private final String USERHEADERID = "X-Sharer-User-Id";
 
     @PostMapping
-    public Item add(@Valid @RequestBody Item item, @RequestHeader(userHeaderId) Long userId) {
+    public Item add(@Valid @RequestBody Item item, @RequestHeader(USERHEADERID) Long userId) {
         log.info("Добавляем вещь");
         return this.itemService.add(item, userId);
     }
 
+    @PostMapping("/{itemId}/comment")
+    public CommentDto add(@Valid @RequestBody Comment comment, @RequestHeader(USERHEADERID) Long userId, @PathVariable Long itemId) {
+        log.info("Добавляем комментарий");
+        return this.itemService.addComment(comment, itemId, userId);
+    }
+
     @PatchMapping("/{itemId}")
-    public Item updatePatch(@RequestBody ItemDto item, @PathVariable Long itemId, @RequestHeader(userHeaderId) Long userId) {
+    public Item updatePatch(@RequestBody ItemDto item, @PathVariable Long itemId, @RequestHeader(USERHEADERID) Long userId) {
         log.info("Обновляем данные товара");
         return this.itemService.updatePatch(item, itemId, userId);
     }
 
     @GetMapping("/{itemId}")
-    public Item getItem(@PathVariable Long itemId, @RequestHeader(userHeaderId) Long userId) {
+    public ItemDto getItem(@PathVariable Long itemId, @RequestHeader(USERHEADERID) Long userId) {
         return this.itemService.getItem(itemId, userId);
     }
 
     @GetMapping
-    public List<Item> getItems(@RequestHeader(userHeaderId) Long userId) {
+    public List<ItemDto> getItems(@RequestHeader(USERHEADERID) Long userId) {
         return this.itemService.getItems(userId);
     }
 

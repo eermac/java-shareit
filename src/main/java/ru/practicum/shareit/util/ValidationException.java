@@ -26,6 +26,8 @@ public class ValidationException extends RuntimeException {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         } else if (HttpMethod.POST.equals(method) && status == 1) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        } else if (HttpMethod.GET.equals(method) && status == 1) {
+            throw new Error(message);
         }
     }
 }
