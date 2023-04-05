@@ -70,7 +70,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public CommentDto addComment(Comment comment, Long itemId, Long userId) {
-        if (userRepository.existsById(userId) & repository.existsById(itemId)) {
+        if (userRepository.existsById(userId) && repository.existsById(itemId)) {
             Booking booking = bookingRepository.findFirstByItemAndBooker(itemId, userId);
             if (!comment.getText().isBlank()
                     && booking.getStatus().equals(BookingState.APPROVED)

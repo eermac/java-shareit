@@ -68,7 +68,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingResponse getBooking(Long bookingId, Long userId) {
-        if (userRepository.existsById(userId) & bookingRepository.existsById(bookingId)) {
+        if (userRepository.existsById(userId) && bookingRepository.existsById(bookingId)) {
             if (itemRepository.findById(bookingRepository.findById(bookingId).get().getItem())
                     .get()
                     .getOwner()
@@ -139,7 +139,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private boolean checkBooking(BookingDto booking) {
-        if (booking.getStart() == null | booking.getEnd() == null) {
+        if (booking.getStart() == null || booking.getEnd() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
