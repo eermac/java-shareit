@@ -40,7 +40,7 @@ public class BookingServiceImpl implements BookingService {
         }
 
         if (userRepository.existsById(userId)) {
-            if (checkBooking(booking) & itemRepository.findById(booking.getItemId()).get().getAvailable()) {
+            if (checkBooking(booking) && itemRepository.findById(booking.getItemId()).get().getAvailable()) {
                 Booking newBooking = bookingRepository.save(bookingMap(booking, userId));
                 return bookingMapResponse(newBooking, userId, booking.getItemId());
             } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -73,7 +73,7 @@ public class BookingServiceImpl implements BookingService {
                     .get()
                     .getOwner()
                     .equals(userId)
-                    | bookingRepository.findById(bookingId).get().getBooker().equals(userId)) {
+                    || bookingRepository.findById(bookingId).get().getBooker().equals(userId)) {
                 Booking booking = bookingRepository.findById(bookingId).orElseThrow();
                 return bookingMapResponse(bookingRepository.save(booking), booking.getBooker(), booking.getItem());
             } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -91,7 +91,7 @@ public class BookingServiceImpl implements BookingService {
                 } else if (state.equalsIgnoreCase(BookingState.REJECTED.name())) {
                     newBookingList = bookingRepository.findByBookerAndStatusOrderByEndDesc(userId, BookingState.REJECTED);
                 } else if (state.equalsIgnoreCase(StateStatus.ALL.name())
-                        | state.equalsIgnoreCase(StateStatus.FUTURE.name())) {
+                        || state.equalsIgnoreCase(StateStatus.FUTURE.name())) {
                     newBookingList = bookingRepository.findByBookerOrderByEndDesc(userId);
                 }
 
@@ -117,9 +117,9 @@ public class BookingServiceImpl implements BookingService {
                 for (Item next: itemList) {
                     List<Booking> newBookingList;
                     if (state.equalsIgnoreCase(StateStatus.ALL.name())
-                            | state.equalsIgnoreCase(StateStatus.FUTURE.name())
-                            | state.equalsIgnoreCase(StateStatus.CURRENT.name())
-                            | state.equalsIgnoreCase(StateStatus.PAST.name())) {
+                            || state.equalsIgnoreCase(StateStatus.FUTURE.name())
+                            || state.equalsIgnoreCase(StateStatus.CURRENT.name())
+                            || state.equalsIgnoreCase(StateStatus.PAST.name())) {
                         newBookingList = bookingRepository.findByItemOrderByEndDesc(next.getId());
                     } else {
                         newBookingList = bookingRepository.findByItemAndStatusOrderByEndDesc(next.getId(),
@@ -144,8 +144,8 @@ public class BookingServiceImpl implements BookingService {
         }
 
         if (booking.getStart().isEqual(booking.getEnd())
-                | booking.getStart().isAfter(booking.getEnd())
-                | booking.getStart().isBefore(LocalDateTime.now())) {
+                || booking.getStart().isAfter(booking.getEnd())
+                || booking.getStart().isBefore(LocalDateTime.now())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
@@ -172,11 +172,11 @@ public class BookingServiceImpl implements BookingService {
 
     private boolean checkState(String state) {
         if (state.equalsIgnoreCase(StateStatus.ALL.name())
-                | state.equalsIgnoreCase(StateStatus.FUTURE.name())
-                | state.equalsIgnoreCase(BookingState.WAITING.name())
-                | state.equalsIgnoreCase(BookingState.REJECTED.name())
-                | state.equalsIgnoreCase(StateStatus.CURRENT.name())
-                | state.equalsIgnoreCase(StateStatus.PAST.name())) {
+                || state.equalsIgnoreCase(StateStatus.FUTURE.name())
+                || state.equalsIgnoreCase(BookingState.WAITING.name())
+                || state.equalsIgnoreCase(BookingState.REJECTED.name())
+                || state.equalsIgnoreCase(StateStatus.CURRENT.name())
+                || state.equalsIgnoreCase(StateStatus.PAST.name())) {
             return true;
         } else throw new IncorrectParameterException(state);
     }

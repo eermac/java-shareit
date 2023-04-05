@@ -40,7 +40,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item updatePatch(ItemDto item, Long itemId, Long userId) {
-        if (userRepository.existsById(userId) & repository.existsById(itemId)) {
+        if (userRepository.existsById(userId) && repository.existsById(itemId)) {
             Item newItem = repository.findById(itemId).orElseThrow();
             itemMap(newItem, item);
             return this.repository.save(newItem);
@@ -49,7 +49,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto getItem(Long itemId, Long userId) {
-        if (repository.existsById(itemId) & userRepository.existsById(userId)) {
+        if (repository.existsById(itemId) && userRepository.existsById(userId)) {
             return itemDtoMap(itemId, userId);
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
@@ -73,8 +73,8 @@ public class ItemServiceImpl implements ItemService {
         if (userRepository.existsById(userId) & repository.existsById(itemId)) {
             Booking booking = bookingRepository.findFirstByItemAndBooker(itemId, userId);
             if (!comment.getText().isBlank()
-                    & booking.getStatus().equals(BookingState.APPROVED)
-                    & LocalDateTime.now().isAfter(booking.getStart())) {
+                    && booking.getStatus().equals(BookingState.APPROVED)
+                    && LocalDateTime.now().isAfter(booking.getStart())) {
                 comment.setAuthorId(userId);
                 comment.setItemId(itemId);
                 return commentMap(commentRepository.save(comment), userId);
