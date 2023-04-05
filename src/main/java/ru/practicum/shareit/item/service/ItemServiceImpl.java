@@ -33,7 +33,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Item add(Item item, Long userId) {
         if (userRepository.existsById(userId)) {
-            item.setOwner(userId);
+            item.setOwner(userRepository.findById(userId).get());
             return this.repository.save(item);
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
@@ -57,7 +57,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getItems(Long userId) {
         if (userRepository.existsById(userId)) {
-            List<Item> itemList = repository.findByOwnerOrderByIdAsc(userId);
+            List<Item> itemList = repository.itemOwnerSearch(userId);
+            log.info(itemList+"!!!!!!!!!!");
             List<ItemDto> itemDtoList = new ArrayList<>();
 
             for (Item next: itemList) {
@@ -103,70 +104,82 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    private ItemDto itemDtoMap(Long itemId, Long userId) {
+    private ItemDto itemDtoMap(Long itemId, Long userID) {
         Item item = repository.findById(itemId).get();
-        List<Booking> bookingList = bookingRepository.findByItemOrderByStartAsc(itemId);
-        List<Comment> commentList = commentRepository.findByItemId(itemId);
-        List<Booking> updateBookingList = new ArrayList<>();
-        List<CommentDto> commentDtoList = new ArrayList<>();
 
-        for (Booking next: bookingList) {
-            if (next.getStatus().equals(BookingState.APPROVED)) {
-                updateBookingList.add(next);
-            }
-        }
-
-        for (Comment next: commentList) {
-            commentDtoList.add(commentMap(next, next.getAuthorId()));
-        }
-
-        if (item.getOwner().equals(userId)) {
-            if (updateBookingList.isEmpty()) {
-                return new ItemDto(item.getId(),
+        return new ItemDto(item.getId(),
                         item.getName(),
                         item.getDescription(),
                         item.getAvailable(),
                         0,
                         null,
                         null,
-                        commentDtoList);
-            } else if (updateBookingList.size() > 1) {
-                BookingDate bookingLast = new BookingDate(updateBookingList.get(0).getId(),
-                        updateBookingList.get(0).getBooker());
-                BookingDate bookingNext = new BookingDate(updateBookingList.get(1).getId(),
-                        updateBookingList.get(1).getBooker());
-
-                return new ItemDto(item.getId(),
-                        item.getName(),
-                        item.getDescription(),
-                        item.getAvailable(),
-                        0,
-                        bookingLast,
-                        bookingNext,
-                        commentDtoList);
-            } else {
-                BookingDate bookingLast = new BookingDate(updateBookingList.get(0).getId(),
-                        updateBookingList.get(0).getBooker());
-                return new ItemDto(item.getId(),
-                        item.getName(),
-                        item.getDescription(),
-                        item.getAvailable(),
-                        0,
-                        bookingLast,
-                        bookingLast,
-                        commentDtoList);
-            }
-        } else {
-            return new ItemDto(item.getId(),
-                    item.getName(),
-                    item.getDescription(),
-                    item.getAvailable(),
-                    0,
-                    null,
-                    null,
-                    commentDtoList);
-        }
+                        null);
     }
+//    private ItemDto itemDtoMap(Long itemId, Long userId) {
+//        Item item = repository.findById(itemId).get();
+//        List<Booking> bookingList = bookingRepository.findByItemOrderByStartAsc(itemId);
+//        List<Comment> commentList = commentRepository.findByItemId(itemId);
+//        List<Booking> updateBookingList = new ArrayList<>();
+//        List<CommentDto> commentDtoList = new ArrayList<>();
+//
+//        for (Booking next: bookingList) {
+//            if (next.getStatus().equals(BookingState.APPROVED)) {
+//                updateBookingList.add(next);
+//            }
+//        }
+//
+//        for (Comment next: commentList) {
+//            commentDtoList.add(commentMap(next, next.getAuthorId()));
+//        }
+//
+//        if (item.getOwner().equals(userId)) {
+//            if (updateBookingList.isEmpty()) {
+//                return new ItemDto(item.getId(),
+//                        item.getName(),
+//                        item.getDescription(),
+//                        item.getAvailable(),
+//                        0,
+//                        null,
+//                        null,
+//                        commentDtoList);
+//            } else if (updateBookingList.size() > 1) {
+//                BookingDate bookingLast = new BookingDate(updateBookingList.get(0).getId(),
+//                        updateBookingList.get(0).getBooker());
+//                BookingDate bookingNext = new BookingDate(updateBookingList.get(1).getId(),
+//                        updateBookingList.get(1).getBooker());
+//
+//                return new ItemDto(item.getId(),
+//                        item.getName(),
+//                        item.getDescription(),
+//                        item.getAvailable(),
+//                        0,
+//                        bookingLast,
+//                        bookingNext,
+//                        commentDtoList);
+//            } else {
+//                BookingDate bookingLast = new BookingDate(updateBookingList.get(0).getId(),
+//                        updateBookingList.get(0).getBooker());
+//                return new ItemDto(item.getId(),
+//                        item.getName(),
+//                        item.getDescription(),
+//                        item.getAvailable(),
+//                        0,
+//                        bookingLast,
+//                        bookingLast,
+//                        commentDtoList);
+//            }
+//        } else {
+//            return new ItemDto(item.getId(),
+//                    item.getName(),
+//                    item.getDescription(),
+//                    item.getAvailable(),
+//                    0,
+//                    null,
+//                    null,
+//                    commentDtoList);
+//        }
+//    }
 
     private CommentDto commentMap(Comment comment, Long userId) {
         return new CommentDto(comment.getId(),
