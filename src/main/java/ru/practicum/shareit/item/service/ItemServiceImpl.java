@@ -77,7 +77,7 @@ public class ItemServiceImpl implements ItemService {
                     & LocalDateTime.now().isAfter(booking.getStart())) {
                 comment.setAuthorId(userId);
                 comment.setItemId(itemId);
-                return commentMap(commentRepository.save(comment), userId );
+                return commentMap(commentRepository.save(comment), userId);
             } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }

@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class BookingServiceImpl implements BookingService{
+public class BookingServiceImpl implements BookingService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
@@ -122,8 +122,8 @@ public class BookingServiceImpl implements BookingService{
                             | state.equalsIgnoreCase(StateStatus.PAST.name())) {
                         newBookingList = bookingRepository.findByItemOrderByEndDesc(next.getId());
                     } else {
-                        newBookingList = bookingRepository.findByItemAndStatusOrderByEndDesc(next.getId()
-                                , BookingState.valueOf(state));
+                        newBookingList = bookingRepository.findByItemAndStatusOrderByEndDesc(next.getId(),
+                                BookingState.valueOf(state));
 
                     }
                     bookingList.addAll(newBookingList);
