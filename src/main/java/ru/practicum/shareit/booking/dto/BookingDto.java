@@ -11,4 +11,7 @@ public class BookingDto {
     private Long itemId;
     private LocalDateTime start;
     private LocalDateTime end;
+    public BookingDto() {
+        super();
+    }
 }

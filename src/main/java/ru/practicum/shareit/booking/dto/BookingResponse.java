@@ -17,4 +17,7 @@ public class BookingResponse {
     private BookingState status;
     private User booker;
     private Item item;
+    public BookingResponse() {
+        super();
+    }
 }

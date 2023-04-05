@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(Long id) {
-        if(this.repository.existsById(id)) {
+        if (this.repository.existsById(id)) {
             return this.repository.findById(id).orElseThrow();
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
@@ -52,11 +52,11 @@ public class UserServiceImpl implements UserService {
     }
 
     private void userMap(User newUser, UserDto updateUser) {
-        if(updateUser.getEmail() != null) {
+        if (updateUser.getEmail() != null) {
             newUser.setEmail(updateUser.getEmail());
         }
 
-        if(updateUser.getName() != null) {
+        if (updateUser.getName() != null) {
             newUser.setName(updateUser.getName());
         }
     }

@@ -18,33 +18,37 @@ import java.util.List;
 @Slf4j
 public class ItemController {
     private final ItemService itemService;
-    private final String USERHEADERID = "X-Sharer-User-Id";
+    private final String USER_HEADER_ID = "X-Sharer-User-Id";
 
     @PostMapping
-    public Item add(@Valid @RequestBody Item item, @RequestHeader(USERHEADERID) Long userId) {
+    public Item add(@Valid @RequestBody Item item, @RequestHeader(USER_HEADER_ID) Long userId) {
         log.info("Добавляем вещь");
         return this.itemService.add(item, userId);
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentDto add(@Valid @RequestBody Comment comment, @RequestHeader(USERHEADERID) Long userId, @PathVariable Long itemId) {
+    public CommentDto add(@Valid @RequestBody Comment comment,
+                          @RequestHeader(USER_HEADER_ID) Long userId,
+                          @PathVariable Long itemId) {
         log.info("Добавляем комментарий");
         return this.itemService.addComment(comment, itemId, userId);
     }
 
     @PatchMapping("/{itemId}")
-    public Item updatePatch(@RequestBody ItemDto item, @PathVariable Long itemId, @RequestHeader(USERHEADERID) Long userId) {
+    public Item updatePatch(@RequestBody ItemDto item,
+                            @PathVariable Long itemId,
+                            @RequestHeader(USER_HEADER_ID) Long userId) {
         log.info("Обновляем данные товара");
         return this.itemService.updatePatch(item, itemId, userId);
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItem(@PathVariable Long itemId, @RequestHeader(USERHEADERID) Long userId) {
+    public ItemDto getItem(@PathVariable Long itemId, @RequestHeader(USER_HEADER_ID) Long userId) {
         return this.itemService.getItem(itemId, userId);
     }
 
     @GetMapping
-    public List<ItemDto> getItems(@RequestHeader(USERHEADERID) Long userId) {
+    public List<ItemDto> getItems(@RequestHeader(USER_HEADER_ID) Long userId) {
         return this.itemService.getItems(userId);
     }
 
@@ -52,5 +56,4 @@ public class ItemController {
     public List<Item> getItemsForSearch(@RequestParam(defaultValue = "", required = false) String text) {
         return this.itemService.getItemsForSearch(text);
     }
-
 }
