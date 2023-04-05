@@ -19,6 +19,7 @@ public class ItemDto {
     private BookingDate lastBooking;
     private BookingDate nextBooking;
     private List<CommentDto> comments;
+
     public ItemDto() {
         super();
     }

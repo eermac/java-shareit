@@ -8,6 +8,7 @@ import lombok.Data;
 public class BookingDate {
     private Long id;
     private Long bookerId;
+
     public BookingDate() {
         super();
     }

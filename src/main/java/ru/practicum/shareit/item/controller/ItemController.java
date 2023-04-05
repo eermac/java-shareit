@@ -18,17 +18,17 @@ import java.util.List;
 @Slf4j
 public class ItemController {
     private final ItemService itemService;
-    private final String USER_HEADER_ID = "X-Sharer-User-Id";
+    private final String userHeaderId = "X-Sharer-User-Id";
 
     @PostMapping
-    public Item add(@Valid @RequestBody Item item, @RequestHeader(USER_HEADER_ID) Long userId) {
+    public Item add(@Valid @RequestBody Item item, @RequestHeader(userHeaderId) Long userId) {
         log.info("Добавляем вещь");
         return this.itemService.add(item, userId);
     }
 
     @PostMapping("/{itemId}/comment")
     public CommentDto add(@Valid @RequestBody Comment comment,
-                          @RequestHeader(USER_HEADER_ID) Long userId,
+                          @RequestHeader(userHeaderId) Long userId,
                           @PathVariable Long itemId) {
         log.info("Добавляем комментарий");
         return this.itemService.addComment(comment, itemId, userId);
@@ -37,18 +37,18 @@ public class ItemController {
     @PatchMapping("/{itemId}")
     public Item updatePatch(@RequestBody ItemDto item,
                             @PathVariable Long itemId,
-                            @RequestHeader(USER_HEADER_ID) Long userId) {
+                            @RequestHeader(userHeaderId) Long userId) {
         log.info("Обновляем данные товара");
         return this.itemService.updatePatch(item, itemId, userId);
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItem(@PathVariable Long itemId, @RequestHeader(USER_HEADER_ID) Long userId) {
+    public ItemDto getItem(@PathVariable Long itemId, @RequestHeader(userHeaderId) Long userId) {
         return this.itemService.getItem(itemId, userId);
     }
 
     @GetMapping
-    public List<ItemDto> getItems(@RequestHeader(USER_HEADER_ID) Long userId) {
+    public List<ItemDto> getItems(@RequestHeader(userHeaderId) Long userId) {
         return this.itemService.getItems(userId);
     }
 
