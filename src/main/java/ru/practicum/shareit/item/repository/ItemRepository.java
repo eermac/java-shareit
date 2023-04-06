@@ -7,9 +7,7 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
-    List<Item> findByOwner(Long ownerId);
-
-    @Query("select i from Item i where i.owner.id = ?1")
+    @Query("select i from Item i where i.owner.id = ?1 order by i.id")
     List<Item> itemOwnerSearch(Long ownerId);
 
     @Query("select i " +
