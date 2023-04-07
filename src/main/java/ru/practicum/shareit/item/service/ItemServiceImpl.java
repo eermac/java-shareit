@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import ru.practicum.shareit.booking.dto.BookingDate;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -15,12 +14,12 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static ru.practicum.shareit.item.mapper.ItemMapper.*;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +50,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto getItem(Long itemId, Long userId) {
         if (repository.existsById(itemId) && userRepository.existsById(userId)) {
-            return itemDtoMap(itemId, userId);
+            List<Booking> bookingList = bookingRepository.searchBooking(itemId, BookingState.APPROVED, userId);
+            List<Comment> commentList = commentRepository.searchCommentByItem(itemId);
+            return itemDtoMap(repository.findById(itemId).get(), bookingList, commentList);
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
@@ -62,7 +63,9 @@ public class ItemServiceImpl implements ItemService {
             List<ItemDto> itemDtoList = new ArrayList<>();
 
             for (Item next: itemList) {
-                itemDtoList.add(itemDtoMap(next.getId(), userId));
+                itemDtoList.add(itemDtoMap(next,
+                        bookingRepository.searchBooking(next.getId(), BookingState.APPROVED, userId),
+                        commentRepository.searchCommentByItem(next.getId())));
             }
 
             return itemDtoList;
@@ -84,80 +87,5 @@ public class ItemServiceImpl implements ItemService {
         if (text.isEmpty()) {
             return new ArrayList<>();
         } else return repository.itemSearch(text);
-    }
-
-    private void itemMap(Item item, ItemDto updateItem) {
-        if (updateItem.getName() != null) {
-            item.setName(updateItem.getName());
-        }
-
-        if (updateItem.getDescription() != null) {
-            item.setDescription(updateItem.getDescription());
-        }
-
-        if (updateItem.getAvailable() != null) {
-            item.setAvailable(updateItem.getAvailable());
-        }
-    }
-
-    private ItemDto itemDtoMap(Long itemId, Long userId) {
-        Item item = repository.findById(itemId).get();
-        List<Booking> bookingList = bookingRepository.searchBooking(itemId, BookingState.APPROVED, userId);
-        List<Comment> commentList = commentRepository.searchCommentByItem(itemId);
-        List<CommentDto> commentDtoList = new ArrayList<>();
-
-        for (Comment next: commentList) {
-            commentDtoList.add(commentMap(next, next.getAuthorId()));
-        }
-
-        if (bookingList.isEmpty()) {
-            return new ItemDto(item.getId(),
-                    item.getName(),
-                    item.getDescription(),
-                    item.getAvailable(),
-                    0,
-                    null,
-                    null,
-                    commentDtoList);
-        } else if (bookingList.size() > 1) {
-            BookingDate bookingDateLast = new BookingDate(bookingList.get(0).getId(),
-                    bookingList.get(0).getBooker().getId());
-
-            BookingDate bookingDateNext = new BookingDate(bookingList.get(1).getId(),
-                    bookingList.get(1).getBooker().getId());
-
-            if (bookingList.size() == 4) {
-                bookingDateLast.setId(6L);
-                bookingDateLast.setBookerId(1L);
-                bookingDateNext.setId(4L);
-                bookingDateNext.setBookerId(5L);
-            }
-            return new ItemDto(item.getId(),
-                    item.getName(),
-                    item.getDescription(),
-                    item.getAvailable(),
-                    0,
-                    bookingDateLast,
-                    bookingDateNext,
-                    commentDtoList);
-        } else {
-            BookingDate bookingDateLast = new BookingDate(bookingList.get(0).getId(),
-                    bookingList.get(0).getBooker().getId());
-            return new ItemDto(item.getId(),
-                    item.getName(),
-                    item.getDescription(),
-                    item.getAvailable(),
-                    0,
-                    bookingDateLast,
-                    null,
-                    commentDtoList);
-        }
-    }
-
-    private CommentDto commentMap(Comment comment, User user) {
-        return new CommentDto(comment.getId(),
-                comment.getText(),
-                user.getName(),
-                LocalDateTime.now());
     }
 }

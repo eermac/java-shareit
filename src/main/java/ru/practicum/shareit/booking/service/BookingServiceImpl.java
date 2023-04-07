@@ -6,11 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.model.StateStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.util.IncorrectParameterException;
 
@@ -28,7 +31,10 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Booking add(BookingDto booking, Long userId) {
             if (checkBooking(booking, userId)) {
-                return bookingRepository.save(bookingMap(booking, userId));
+                return bookingRepository.save(BookingMapper.bookingMap(booking,
+                        userId,
+                        itemRepository.findById(booking.getItemId()).get(),
+                        userRepository.findById(userId).get()));
             } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
 
@@ -91,15 +97,6 @@ public class BookingServiceImpl implements BookingService {
         }
 
         return true;
-    }
-
-    private Booking bookingMap(BookingDto booking, Long userId) {
-        return new Booking(null,
-                booking.getStart(),
-                booking.getEnd(),
-                itemRepository.findById(booking.getItemId()).get(),
-                userRepository.findById(userId).get(),
-                BookingState.WAITING);
     }
 
     private boolean checkState(String state) {
