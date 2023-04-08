@@ -10,11 +10,11 @@ public interface UserService {
 
     User update(User user);
 
-    User updatePatch(UserDto user, Integer userId);
-
-    User getUser(Integer userId);
-
-    User deleteUser(Integer userId);
+    User updatePatch(UserDto updateUser, Long userId);
 
     List<User> getAll();
+
+    void delete(Long id);
+
+    User getUser(Long id);
 }
