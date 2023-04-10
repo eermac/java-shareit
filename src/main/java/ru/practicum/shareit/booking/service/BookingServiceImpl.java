@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -61,19 +62,31 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> getAllBookings(Long userId, String state) {
+    public List<Booking> getAllBookings(Long userId, String state, Integer from, Integer size) {
         if (userRepository.existsById(userId)) {
             if (checkState(state)) {
-                return bookingRepository.bookingSearch(userId, state);
+                if (from != null && size != null) {
+                    if (from >= 0 && size > 0) {
+                        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+                        return bookingRepository.bookingSearch(userId, state, page).getContent();
+                    } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+                } else {
+                    return bookingRepository.bookingSearch(userId, state);
+                }
             } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
     @Override
-    public List<Booking> getAllBookingsOwner(Long userId, String state) {
+    public List<Booking> getAllBookingsOwner(Long userId, String state, Integer from, Integer size) {
         if (!itemRepository.itemOwnerSearch(userId).isEmpty()) {
             if (checkState(state)) {
-                return bookingRepository.bookingSearchOwner(userId, state);
+                if (from != null && size != null) {
+                    if (from >= 0 && size > 0) {
+                        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+                        return bookingRepository.bookingSearchOwner(userId, state, page).getContent();
+                    } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+                } else return bookingRepository.bookingSearchOwner(userId, state);
             } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }

@@ -10,6 +10,9 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("select i from Item i where i.owner.id = ?1 order by i.id")
     List<Item> itemOwnerSearch(Long ownerId);
 
+    @Query("select i from Item i where i.requestId = ?1")
+    List<Item> itemRequestSearch(Long requestId);
+
     @Query("select i " +
             "from Item i " +
             "where (upper(i.name) like upper(concat('%', ?1, '%')) " +

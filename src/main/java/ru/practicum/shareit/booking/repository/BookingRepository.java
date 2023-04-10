@@ -1,5 +1,7 @@
 package ru.practicum.shareit.booking.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.practicum.shareit.booking.model.Booking;
@@ -15,7 +17,25 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "OR ?2 = 'WAITING' AND b.status = 'WAITING' " +
             "OR ?2 = 'REJECTED' AND b.status = 'REJECTED' " +
             "OR ?2 = 'ALL') ORDER BY b.end DESC ")
+    Page<Booking> bookingSearch(Long userId, String state, Pageable page);
+
+    @Query("Select b from Booking b where b.booker.id = (?1) " +
+            "AND (?2 = 'CURRENT' AND CURRENT_TIMESTAMP BETWEEN b.start AND b.end " +
+            "OR ?2 = 'PAST' AND b.end < CURRENT_TIMESTAMP " +
+            "OR ?2 = 'FUTURE' AND b.start > CURRENT_TIMESTAMP " +
+            "OR ?2 = 'WAITING' AND b.status = 'WAITING' " +
+            "OR ?2 = 'REJECTED' AND b.status = 'REJECTED' " +
+            "OR ?2 = 'ALL') ORDER BY b.end DESC ")
     List<Booking> bookingSearch(Long userId, String state);
+
+    @Query("Select b from Booking b where b.item.owner.id = (?1) " +
+            "AND (?2 = 'CURRENT' AND CURRENT_TIMESTAMP BETWEEN b.start AND b.end " +
+            "OR ?2 = 'PAST' AND b.end < CURRENT_TIMESTAMP " +
+            "OR ?2 = 'FUTURE' AND b.start > CURRENT_TIMESTAMP " +
+            "OR ?2 = 'WAITING' AND b.status = 'WAITING' " +
+            "OR ?2 = 'REJECTED' AND b.status = 'REJECTED' " +
+            "OR ?2 = 'ALL') ORDER BY b.start DESC ")
+    Page<Booking> bookingSearchOwner(Long userId, String state, Pageable page);
 
     @Query("Select b from Booking b where b.item.owner.id = (?1) " +
             "AND (?2 = 'CURRENT' AND CURRENT_TIMESTAMP BETWEEN b.start AND b.end " +

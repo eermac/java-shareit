@@ -14,6 +14,7 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -29,11 +30,13 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     @Override
     public Item add(Item item, Long userId) {
         if (userRepository.existsById(userId)) {
             item.setOwner(userRepository.findById(userId).get());
+
             return this.repository.save(item);
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
