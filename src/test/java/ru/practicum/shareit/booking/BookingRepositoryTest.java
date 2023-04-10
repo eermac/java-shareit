@@ -20,7 +20,7 @@ public class BookingRepositoryTest {
     private BookingRepository bookingRepository;
 
     @BeforeEach
-    private void add(){
+    private void add() {
         Booking booking = new Booking(null, LocalDateTime.now(), LocalDateTime.now(), null, null, BookingState.WAITING);
         bookingRepository.save(booking);
     }
