@@ -29,12 +29,11 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking add(BookingDto booking, Long userId) {
-            if (checkBooking(booking, userId)) {
+             checkBooking(booking, userId);
                 return bookingRepository.save(BookingMapper.bookingMap(booking,
                         userId,
                         itemRepository.findById(booking.getItemId()).get(),
                         userRepository.findById(userId).get()));
-            } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
 
     @Override
@@ -91,7 +90,7 @@ public class BookingServiceImpl implements BookingService {
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    private boolean checkBooking(BookingDto booking, Long userId) {
+     private boolean checkBooking(BookingDto booking, Long userId) {
         if (!itemRepository.existsById(booking.getItemId())
                 || !userRepository.existsById(userId)
                 || itemRepository.findById(booking.getItemId()).get().getOwner().getId().equals(userId)) {
@@ -110,7 +109,7 @@ public class BookingServiceImpl implements BookingService {
         return true;
     }
 
-    private boolean checkState(String state) {
+     private boolean checkState(String state) {
         if (state.equalsIgnoreCase(StateStatus.ALL.name())
                 || state.equalsIgnoreCase(StateStatus.FUTURE.name())
                 || state.equalsIgnoreCase(BookingState.WAITING.name())
