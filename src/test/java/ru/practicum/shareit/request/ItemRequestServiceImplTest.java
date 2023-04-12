@@ -140,7 +140,7 @@ public class ItemRequestServiceImplTest {
         try {
             List<ItemRequestDto> itemRequest1 = itemRequestService.getAllItemRequestsOtherUsers(item.getOwner().getId(),
                     -110,
-                    1);
+                    -21);
         } catch (ResponseStatusException ex) {
             assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
         }

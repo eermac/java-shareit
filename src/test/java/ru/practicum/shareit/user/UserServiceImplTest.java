@@ -92,6 +92,15 @@ public class UserServiceImplTest {
         assertEquals(userDto.getEmail(), user.getEmail());
     }
 
+    @Test
+    void userMap() {
+        UserDto user1 = new UserDto("sdfdsf", "sdfl@bk.ru");
+        UserMapper.userMap(user, user1);
+
+        assertEquals(user1.getName(), "sdfdsf");
+        assertEquals(user1.getEmail(), "sdfl@bk.ru");
+    }
+
     @AfterEach
     public void deleteUser() {
         userRepository.deleteAll();
