@@ -147,8 +147,6 @@ public class ItemServiceImplTest {
                 user,
                 BookingState.APPROVED));
 
-        log.info("\n+++++++++++++++\n" +booking);
-
         CommentDto commentDto = itemService.addComment(comment, item.getId(), user.getId());
 
         assertEquals(commentDto.getText(), "text");
