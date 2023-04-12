@@ -360,6 +360,16 @@ public class BookingServiceImplTest {
         }
     }
 
+    @Test
+    void checkStateTest() {
+        List<Booking> bookingList = bookingService.getAllBookings(user.getId(), "FUTURE", 0, 1);
+        bookingList = bookingService.getAllBookings(user.getId(), "ALL", 0, 1);
+        bookingList = bookingService.getAllBookings(user.getId(), "REJECTED", 0, 1);
+        bookingList = bookingService.getAllBookings(user.getId(), "CURRENT", 0, 1);
+        bookingList = bookingService.getAllBookings(user.getId(), "PAST", 0, 1);
+        assertTrue(bookingList.isEmpty());
+    }
+
 
 
     @AfterEach
