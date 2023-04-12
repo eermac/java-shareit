@@ -120,7 +120,7 @@ public class BookingServiceImplTest {
 
     @Test
     void getBookingWrong() {
-        try{
+        try {
             Booking requestBooking = bookingService.getBooking(booking.getId(), 100L);
         } catch (ResponseStatusException ex) {
             assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
@@ -129,7 +129,7 @@ public class BookingServiceImplTest {
 
     @Test
     void getBookingWrongOwner() {
-        try{
+        try {
             Booking requestBooking = bookingService.getBooking(booking.getId(), item.getOwner().getId());
         } catch (ResponseStatusException ex) {
             assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
@@ -162,7 +162,7 @@ public class BookingServiceImplTest {
 
     @Test
     void getAllBookingsWrongUser() {
-        try{
+        try {
             List<Booking> requestBooking = bookingService.getAllBookings(100L,
                     "WAITING",
                     null,
@@ -174,7 +174,7 @@ public class BookingServiceImplTest {
 
     @Test
     void getAllBookingsWrongState() {
-        try{
+        try {
             List<Booking> requestBooking = bookingService.getAllBookings(booking.getBooker().getId(),
                     "sdfg",
                     null,
@@ -186,7 +186,7 @@ public class BookingServiceImplTest {
 
     @Test
     void getAllBookingsWrongFrom() {
-        try{
+        try {
             List<Booking> requestBooking = bookingService.getAllBookings(booking.getBooker().getId(),
                     "WAITING",
                     -1,

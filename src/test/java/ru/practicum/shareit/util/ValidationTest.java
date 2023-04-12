@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ValidationTest {
     @Test
-    void ValidationExceptionPost() {
+    void validationExceptionPost() {
         String error = "test";
 
         try {
@@ -20,7 +20,7 @@ public class ValidationTest {
     }
 
     @Test
-    void ValidationExceptionPut() {
+    void validationExceptionPut() {
         String error = "test";
 
         try {
@@ -31,7 +31,7 @@ public class ValidationTest {
     }
 
     @Test
-    void ValidationExceptionPutStatus() {
+    void validationExceptionPutStatus() {
         String error = "test";
 
         try {
@@ -42,7 +42,7 @@ public class ValidationTest {
     }
 
     @Test
-    void ValidationExceptionPostStatus() {
+    void validationExceptionPostStatus() {
         String error = "test";
 
         try {
@@ -53,7 +53,7 @@ public class ValidationTest {
     }
 
     @Test
-    void ValidationExceptionPost1Status() {
+    void validationExceptionPost1Status() {
         String error = "test";
 
         try {
@@ -64,7 +64,7 @@ public class ValidationTest {
     }
 
     @Test
-    void ValidationExceptionGetStatus() {
+    void validationExceptionGetStatus() {
         String error = "test";
 
         try {

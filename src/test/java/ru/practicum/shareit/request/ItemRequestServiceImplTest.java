@@ -82,7 +82,7 @@ public class ItemRequestServiceImplTest {
     @Test
     void addWrongDescription() {
         itemRequest.setDescription(null);
-        try{
+        try {
             ItemRequest itemRequest1 = itemRequestService.add(itemRequest, user.getId());
         } catch (ResponseStatusException ex) {
             assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
@@ -98,7 +98,7 @@ public class ItemRequestServiceImplTest {
 
     @Test
     void getMyRequestsWrongUser() {
-        try{
+        try {
             List<ItemRequestDto> itemRequest1 = itemRequestService.getMyRequests(100L);
         } catch (ResponseStatusException ex) {
             assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
@@ -137,7 +137,7 @@ public class ItemRequestServiceImplTest {
 
     @Test
     void getAllItemRequestsOtherUsersWrongPage() {
-        try{
+        try {
             List<ItemRequestDto> itemRequest1 = itemRequestService.getAllItemRequestsOtherUsers(item.getOwner().getId(),
                     -110,
                     1);
@@ -155,7 +155,7 @@ public class ItemRequestServiceImplTest {
 
     @Test
     void getRequestWrongUser() {
-        try{
+        try {
             ItemRequestDto itemRequest1 = itemRequestService.getRequest(100L, 1000L);
         } catch (ResponseStatusException ex) {
             assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
