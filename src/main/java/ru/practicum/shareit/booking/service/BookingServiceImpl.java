@@ -63,7 +63,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> getAllBookings(Long userId, String state, Integer from, Integer size) {
         if (userRepository.existsById(userId)) {
-            if (checkState(state)) {
+            checkState(state);
                 if (from != null && size != null) {
                     if (from >= 0 && size > 0) {
                         PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
@@ -72,21 +72,19 @@ public class BookingServiceImpl implements BookingService {
                 } else {
                     return bookingRepository.bookingSearch(userId, state);
                 }
-            } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
     @Override
     public List<Booking> getAllBookingsOwner(Long userId, String state, Integer from, Integer size) {
         if (!itemRepository.itemOwnerSearch(userId).isEmpty()) {
-            if (checkState(state)) {
+            checkState(state);
                 if (from != null && size != null) {
                     if (from >= 0 && size > 0) {
                         PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
                         return bookingRepository.bookingSearchOwner(userId, state, page).getContent();
                     } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
                 } else return bookingRepository.bookingSearchOwner(userId, state);
-            } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 

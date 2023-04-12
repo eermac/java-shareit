@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRequestRepository itemRequestRepository;
     private final UserRepository userRepository;
@@ -50,7 +52,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         if (from >= 0 && size > 0) {
             List<Item> itemList = itemRepository.itemOwnerSearch(userId);
             List<ItemRequestDto> itemRequestDtoList = new ArrayList<>();
-
             for (Item next: itemList) {
                 if (next.getRequestId() != null) {
                     PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);

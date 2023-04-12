@@ -83,6 +83,25 @@ public class BookingServiceImplTest {
     }
 
     @Test
+    void requestBookingWrongUser() {
+        try {
+        Booking requestBooking = bookingService.requestBooking(booking.getId(), 100L, true);
+        } catch (ResponseStatusException ex) {
+            assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
+        }
+    }
+
+    @Test
+    void requestBookingWrongState() {
+        booking.setStatus(BookingState.APPROVED);
+        try {
+            Booking requestBooking = bookingService.requestBooking(booking.getId(), item.getOwner().getId(), true);
+        } catch (ResponseStatusException ex) {
+            assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+        }
+    }
+
+    @Test
     void requestBookingRejected() {
         Booking requestBooking = bookingService.requestBooking(booking.getId(), item.getOwner().getId(), false);
 
@@ -100,6 +119,24 @@ public class BookingServiceImplTest {
     }
 
     @Test
+    void getBookingWrong() {
+        try{
+            Booking requestBooking = bookingService.getBooking(booking.getId(), 100L);
+        } catch (ResponseStatusException ex) {
+            assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
+        }
+    }
+
+    @Test
+    void getBookingWrongOwner() {
+        try{
+            Booking requestBooking = bookingService.getBooking(booking.getId(), item.getOwner().getId());
+        } catch (ResponseStatusException ex) {
+            assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
+        }
+    }
+
+    @Test
     void getAllBookings() {
         List<Booking> requestBooking = bookingService.getAllBookings(booking.getBooker().getId(),
                 "WAITING",
@@ -112,11 +149,71 @@ public class BookingServiceImplTest {
     }
 
     @Test
+    void getAllBookingsWithPage() {
+        List<Booking> requestBooking = bookingService.getAllBookings(booking.getBooker().getId(),
+                "WAITING",
+                0,
+                1);
+
+        assertTrue(requestBooking.size() > 0);
+        assertEquals(requestBooking.get(0).getId(), booking.getId());
+        assertEquals(requestBooking.get(0).getStatus(), BookingState.WAITING);
+    }
+
+    @Test
+    void getAllBookingsWrongUser() {
+        try{
+            List<Booking> requestBooking = bookingService.getAllBookings(100L,
+                    "WAITING",
+                    null,
+                    null);
+        } catch (ResponseStatusException ex) {
+            assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
+        }
+    }
+
+    @Test
+    void getAllBookingsWrongState() {
+        try{
+            List<Booking> requestBooking = bookingService.getAllBookings(booking.getBooker().getId(),
+                    "sdfg",
+                    null,
+                    null);
+        } catch (IncorrectParameterException ex) {
+            assertEquals("sdfg", ex.getParameter());
+        }
+    }
+
+    @Test
+    void getAllBookingsWrongFrom() {
+        try{
+            List<Booking> requestBooking = bookingService.getAllBookings(booking.getBooker().getId(),
+                    "WAITING",
+                    -1,
+                    1);
+        } catch (ResponseStatusException ex) {
+            assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
+        }
+    }
+
+    @Test
     void getAllBookingsOwner() {
         List<Booking> requestBooking = bookingService.getAllBookingsOwner(item.getOwner().getId(),
                 "WAITING",
                 null,
                 null);
+
+        assertTrue(requestBooking.size() > 0);
+        assertEquals(requestBooking.get(0).getId(), booking.getId());
+        assertEquals(requestBooking.get(0).getStatus(), BookingState.WAITING);
+    }
+
+    @Test
+    void getAllBookingsOwnerWithPage() {
+        List<Booking> requestBooking = bookingService.getAllBookingsOwner(item.getOwner().getId(),
+                "WAITING",
+                0,
+                1);
 
         assertTrue(requestBooking.size() > 0);
         assertEquals(requestBooking.get(0).getId(), booking.getId());

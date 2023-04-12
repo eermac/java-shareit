@@ -8,7 +8,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import ru.practicum.shareit.item.controller.ItemController;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
@@ -34,6 +36,34 @@ public class ItemServiceTest {
         Item testItem = itemService.add(item, userId);
 
         assertEquals(testItem, item);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    void updatePatch() {
+        Item item = new Item();
+        ItemDto itemDto = new ItemDto();
+        Long userId = 1L;
+        when(itemService.updatePatch(itemDto, 1L, userId)).thenReturn(item);
+
+        ResponseEntity<Item> response = ResponseEntity.ok(itemController.updatePatch(itemDto, 1L, userId));
+        Item testItem = itemService.updatePatch(itemDto, 1L, userId);
+
+        assertEquals(testItem, item);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    void addComment() {
+        Comment comment = new Comment();
+        CommentDto commentDto = new CommentDto();
+        Long userId = 1L;
+        when(itemService.addComment(comment, 1L,  userId)).thenReturn(commentDto);
+
+        ResponseEntity<CommentDto> response = ResponseEntity.ok(itemController.add(comment, 1L, userId));
+        CommentDto testComment = itemService.addComment(comment, 1L, userId);
+
+        assertEquals(testComment, commentDto);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 

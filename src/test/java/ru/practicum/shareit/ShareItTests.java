@@ -7,7 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class ShareItTests {
 
 	@Test
-	void contextLoads() {
+	public void main() {
+		ShareItApp.main(new String[] {});
 	}
 
 }

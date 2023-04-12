@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+import ru.practicum.shareit.booking.dto.BookingDate;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -18,6 +19,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -135,23 +137,23 @@ public class ItemServiceImplTest {
         }
     }
 
-//    @Test
-//    void addComment() {
-//        Comment comment = new Comment(null, "text", item, user);
-//        Booking booking = bookingRepository.save(new Booking(null,
-//                LocalDateTime.now().minusDays(1),
-//                LocalDateTime.now().plusDays(3),
-//                item,
-//                user,
-//                BookingState.APPROVED));
-//
-//        log.info("\n+++++++++++++++\n" +booking);
-//
-//        CommentDto commentDto = itemService.addComment(comment, item.getId(), user.getId());
-//
-//        assertEquals(commentDto.getText(), "text");
-//        assertEquals(commentDto.getAuthorName(), user.getName());
-//    }
+    @Test
+    void addComment() {
+        Comment comment = new Comment(null, "text", item, user);
+        Booking booking = bookingRepository.save(new Booking(null,
+                LocalDateTime.now().minusDays(1),
+                LocalDateTime.now().minusDays(2),
+                item,
+                user,
+                BookingState.APPROVED));
+
+        log.info("\n+++++++++++++++\n" +booking);
+
+        CommentDto commentDto = itemService.addComment(comment, item.getId(), user.getId());
+
+        assertEquals(commentDto.getText(), "text");
+        assertEquals(commentDto.getAuthorName(), user.getName());
+    }
 
     @Test
     void addCommentWrongComment() {
@@ -170,9 +172,46 @@ public class ItemServiceImplTest {
         }
     }
 
+    @Test
+    void getItemsSearch() {
+        List<Item> newItem = itemService.getItemsForSearch(item.getDescription());
+
+        assertEquals(newItem.get(0).getName(), item.getName());
+        assertTrue(newItem.size() > 0);
+    }
+
+    @Test
+    void getItemsSearchEmpty() {
+        List<Item> newItem = itemService.getItemsForSearch("hhhh");
+
+        assertTrue(newItem.isEmpty());
+    }
+
+    @Test
+    void commentDtoTest() {
+        CommentDto test = new CommentDto();
+
+        assertTrue(test != null);
+    }
+
+    @Test
+    void userDtoTest() {
+        UserDto test = new UserDto();
+
+        assertTrue(test != null);
+    }
+
+    @Test
+    void bookingDateTest() {
+        BookingDate test = new BookingDate();
+
+        assertTrue(test != null);
+    }
+
     @AfterEach
     private void deleteAll() {
         bookingRepository.deleteAll();
+        commentRepository.deleteAll();
         itemRepository.deleteAll();
         userRepository.deleteAll();
     }
