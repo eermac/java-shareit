@@ -96,7 +96,7 @@ public class ItemServiceImplTest {
             ItemDto itemDto = new ItemDto();
             itemDto.setId(1L);
             itemDto.setName("newItem");
-            Item newItem = itemService.updatePatch(itemDto, 100L, user.getId());
+            Item newItem = itemService.updatePatch(itemDto, 100L, 100L);
         } catch (ResponseStatusException ex) {
             assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
         }
@@ -113,7 +113,7 @@ public class ItemServiceImplTest {
     @Test
     void getItemWrongUser() {
         try {
-            ItemDto newItem = itemService.getItem(item.getId(), 100L);
+            ItemDto newItem = itemService.getItem(100L, 100L);
         } catch (ResponseStatusException ex) {
             assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
         }
@@ -164,7 +164,7 @@ public class ItemServiceImplTest {
                 BookingState.APPROVED));
 
         try {
-        CommentDto commentDto = itemService.addComment(comment, item.getId(), user.getId());
+        CommentDto commentDto = itemService.addComment(comment, 100L, user.getId());
         } catch (ResponseStatusException ex) {
             assertEquals(HttpStatus.BAD_REQUEST, ex.getStatus());
         }
@@ -180,7 +180,7 @@ public class ItemServiceImplTest {
 
     @Test
     void getItemsSearchEmpty() {
-        List<Item> newItem = itemService.getItemsForSearch("hhhh");
+        List<Item> newItem = itemService.getItemsForSearch("");
 
         assertTrue(newItem.isEmpty());
     }

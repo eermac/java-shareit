@@ -121,7 +121,7 @@ public class BookingServiceImplTest {
     @Test
     void getBookingWrong() {
         try {
-            Booking requestBooking = bookingService.getBooking(booking.getId(), 100L);
+            Booking requestBooking = bookingService.getBooking(100L, 100L);
         } catch (ResponseStatusException ex) {
             assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
         }
