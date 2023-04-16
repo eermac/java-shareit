@@ -9,4 +9,14 @@ public class UserMapper {
                 user.getName(),
                 user.getEmail());
     }
+
+    public static void userMap(User newUser, UserDto updateUser) {
+        if (updateUser.getEmail() != null) {
+            newUser.setEmail(updateUser.getEmail());
+        }
+
+        if (updateUser.getName() != null) {
+            newUser.setName(updateUser.getName());
+        }
+    }
 }

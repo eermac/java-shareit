@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -28,12 +29,11 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking add(BookingDto booking, Long userId) {
-            if (checkBooking(booking, userId)) {
+             checkBooking(booking, userId);
                 return bookingRepository.save(BookingMapper.bookingMap(booking,
                         userId,
                         itemRepository.findById(booking.getItemId()).get(),
                         userRepository.findById(userId).get()));
-            } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
 
     @Override
@@ -61,24 +61,34 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> getAllBookings(Long userId, String state) {
+    public List<Booking> getAllBookings(Long userId, String state, Integer from, Integer size) {
         if (userRepository.existsById(userId)) {
-            if (checkState(state)) {
-                return bookingRepository.bookingSearch(userId, state);
-            } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            checkState(state);
+                if (from != null && size != null) {
+                    if (from >= 0 && size > 0) {
+                        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+                        return bookingRepository.bookingSearch(userId, state, page).getContent();
+                    } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+                } else {
+                    return bookingRepository.bookingSearch(userId, state);
+                }
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
     @Override
-    public List<Booking> getAllBookingsOwner(Long userId, String state) {
+    public List<Booking> getAllBookingsOwner(Long userId, String state, Integer from, Integer size) {
         if (!itemRepository.itemOwnerSearch(userId).isEmpty()) {
-            if (checkState(state)) {
-                return bookingRepository.bookingSearchOwner(userId, state);
-            } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            checkState(state);
+                if (from != null && size != null) {
+                    if (from >= 0 && size > 0) {
+                        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+                        return bookingRepository.bookingSearchOwner(userId, state, page).getContent();
+                    } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+                } else return bookingRepository.bookingSearchOwner(userId, state);
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    private boolean checkBooking(BookingDto booking, Long userId) {
+     private boolean checkBooking(BookingDto booking, Long userId) {
         if (!itemRepository.existsById(booking.getItemId())
                 || !userRepository.existsById(userId)
                 || itemRepository.findById(booking.getItemId()).get().getOwner().getId().equals(userId)) {
@@ -97,7 +107,7 @@ public class BookingServiceImpl implements BookingService {
         return true;
     }
 
-    private boolean checkState(String state) {
+     private boolean checkState(String state) {
         if (state.equalsIgnoreCase(StateStatus.ALL.name())
                 || state.equalsIgnoreCase(StateStatus.FUTURE.name())
                 || state.equalsIgnoreCase(BookingState.WAITING.name())

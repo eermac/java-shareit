@@ -38,13 +38,25 @@ public class BookingController {
 
     @GetMapping
     public List<Booking> getAllBookings(@RequestHeader(userHeaderId) Long userId,
+                                        @RequestParam(required = false) String from,
+                                        @RequestParam(required = false) String size,
                                         @RequestParam(required = false, defaultValue = "ALL") String state) {
-        return this.bookingService.getAllBookings(userId, state);
+        if (from == null | size == null) {
+            return this.bookingService.getAllBookings(userId, state, null, null);
+        } else {
+            return this.bookingService.getAllBookings(userId, state, Integer.parseInt(from), Integer.parseInt(size));
+        }
     }
 
     @GetMapping("/owner")
     public List<Booking> getAllBookingsOwner(@RequestHeader(userHeaderId) Long userId,
-                                                @RequestParam(required = false, defaultValue = "ALL") String state) {
-        return this.bookingService.getAllBookingsOwner(userId, state);
+                                             @RequestParam(required = false) String from,
+                                             @RequestParam(required = false) String size,
+                                             @RequestParam(required = false, defaultValue = "ALL") String state) {
+        if (from == null | size == null) {
+            return this.bookingService.getAllBookingsOwner(userId, state, null, null);
+        } else {
+            return this.bookingService.getAllBookingsOwner(userId, state, Integer.parseInt(from), Integer.parseInt(size));
+        }
     }
 }

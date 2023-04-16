@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "items", schema = "public")
 @Getter
+@AllArgsConstructor
 @Setter
 @ToString
 public class Item {
@@ -29,5 +30,9 @@ public class Item {
     @JoinColumn(name = "owner_id")
     private User owner;
     @Column(name = "request_id")
-    private Long request;
+    private Long requestId;
+
+    public Item() {
+        super();
+    }
 }

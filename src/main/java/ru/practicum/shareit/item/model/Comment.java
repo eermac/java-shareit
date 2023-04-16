@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "comments", schema = "public")
 @Getter
+@AllArgsConstructor
 @Setter
 @ToString
 public class Comment {
@@ -23,4 +25,8 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User authorId;
+
+    public Comment() {
+        super();
+    }
 }

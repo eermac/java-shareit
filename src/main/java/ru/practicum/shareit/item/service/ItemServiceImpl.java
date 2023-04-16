@@ -34,6 +34,7 @@ public class ItemServiceImpl implements ItemService {
     public Item add(Item item, Long userId) {
         if (userRepository.existsById(userId)) {
             item.setOwner(userRepository.findById(userId).get());
+
             return this.repository.save(item);
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }

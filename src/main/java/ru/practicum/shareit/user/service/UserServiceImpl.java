@@ -11,6 +11,8 @@ import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
 
+import static ru.practicum.shareit.user.mapper.UserMapper.userMap;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -49,15 +51,5 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long userId) {
         this.repository.deleteById(userId);
-    }
-
-    private void userMap(User newUser, UserDto updateUser) {
-        if (updateUser.getEmail() != null) {
-            newUser.setEmail(updateUser.getEmail());
-        }
-
-        if (updateUser.getName() != null) {
-            newUser.setName(updateUser.getName());
-        }
     }
 }
