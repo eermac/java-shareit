@@ -25,12 +25,6 @@ public class UserController {
         return userClient.add(requestDto);
     }
 
-    @PutMapping
-    public ResponseEntity<Object> update(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                      @RequestBody @Valid UserRequestDto requestDto) {
-        return userClient.update(requestDto);
-    }
-
     @PatchMapping("/{userId}")
     public ResponseEntity<Object> updatePatch(@PathVariable Long userId,
                                          @RequestBody @Valid UserPatchDto requestDto) {
