@@ -29,10 +29,6 @@ public class UserClient extends BaseClient {
         return post("", requestDto);
     }
 
-    public ResponseEntity<Object> update(UserRequestDto requestDto) {
-        return put("", requestDto);
-    }
-
     public ResponseEntity<Object> updatePatch(long userId, UserPatchDto requestDto) {
         return patch("/" + userId, requestDto);
     }
